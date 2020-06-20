@@ -1,6 +1,6 @@
 const express = require("express");
 const port = process.env.PORT || 5000;
-// const mongoose = require("mongoose");
+const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
@@ -12,13 +12,14 @@ const app = express();
 //import models
 // require("./models/...");
 
-// mongoose.Promise = global.Promise;
-// mongoose.connect(
-//   process.env.MONGODB_URI || `mongodb://localhost:27017/...`,
-//   {
-//     useNewUrlParser: true,
-//   }
-// );
+mongoose.Promise = global.Promise;
+mongoose
+  .connect(process.env.MONGODB_URI || `mongodb://localhost:27017/dashboard`, {
+    useNewUrlParser: true,
+  })
+  .catch((e) => {
+    console.error("Connection error", e.message);
+  });
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
