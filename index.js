@@ -10,7 +10,7 @@ const cors = require("cors");
 const app = express();
 
 //import models
-// require("./models/...");
+require("./models/Product");
 
 mongoose.Promise = global.Promise;
 mongoose
@@ -21,12 +21,10 @@ mongoose
     console.error("Connection error", e.message);
   });
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors());
 app.use(bodyParser.json());
 
 //import routes
-// require("./routes/...")(app);
+require("./routes/productRoutes")(app);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
