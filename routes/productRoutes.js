@@ -3,12 +3,12 @@ const Product = mongoose.model("products");
 
 module.exports = (app) => {
   app.get(`/api/products`, async (req, res) => {
-    let products = await Product.find();
+    let products = await Product.find({});
     return res.status(200).send(products);
   });
 
   app.get(`/api/product/:id`, async (req, res) => {
-    let product = await Product.find({ _id: req.params.id });
+    let product = await Product.findById(req.params.id);
     return res.status(200).send({
       error: false,
       product,
@@ -18,7 +18,7 @@ module.exports = (app) => {
   app.post(`/api/product`, async (req, res) => {
     const body = req.body;
     if (!body) {
-      return res.status(400).json({
+      return res.status(400).send({
         error: true,
         errorMessage: "You must provide a product",
       });
