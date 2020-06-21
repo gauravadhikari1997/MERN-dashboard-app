@@ -10,6 +10,7 @@ const app = express();
 
 //import models
 require("./models/Product");
+require("./models/User");
 
 mongoose.Promise = global.Promise;
 mongoose
@@ -24,6 +25,7 @@ app.use(bodyParser.json());
 
 //import routes
 require("./routes/productRoutes")(app);
+require("./routes/userRoutes")(app);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
