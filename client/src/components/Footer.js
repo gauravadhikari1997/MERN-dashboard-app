@@ -1,26 +1,27 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer class="border-top text-center small text-muted py-3 fixed-bottom">
+    <footer className=" text-center small text-muted py-3 ">
       <p>
-        <a href="/about-us" class="mx-1">
+        <Link to="/about-us" className="mx-1 text-decoration-none">
           About Us
-        </a>{" "}
+        </Link>{" "}
         |{" "}
-        <a class="mx-1" href="/terms">
+        <Link className="mx-1 text-decoration-none" to="/terms">
           Terms
-        </a>{" "}
+        </Link>{" "}
         |{" "}
-        <a class="mx-1" href="/contact">
+        <Link className="mx-1 text-decoration-none" to="/contact">
           Contact
-        </a>
+        </Link>
       </p>
-      <p class="m-0">
+      <p className="m-0">
         Copyright &copy; 2020{" "}
-        <a href="/" class="text-muted">
+        <Link to="/" className="text-warning text-decoration-none">
           Dashboard
-        </a>
+        </Link>
         . All rights reserved.
       </p>
     </footer>

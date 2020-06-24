@@ -1,21 +1,40 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
-    <header className="header-bar bg-primary mb-3">
-      <div className="container d-flex flex-column flex-md-row align-items-center p-3">
-        <h4 className="my-0 mr-md-auto font-weight-normal">
-          <a href="/" className="text-white">
-            Dashboard
-          </a>
-        </h4>
-        <div className="flex-row my-3 my-md-0">
-          <span className="mr-3 text-light">Category</span>
-          <span className="btn mr-2 text-light">Sign In</span>
-          <span className="btn mr-2 text-light">Sign Up</span>
+    <nav className="navbar navbar-light navbar-expand-md navigation-clean-button">
+      <div className="container">
+        <Link className="navbar-brand text-warning " to="/">
+          <h3>Dashboard</h3>
+        </Link>
+        <button
+          data-toggle="collapse"
+          data-target="#navcol-1"
+          className="navbar-toggler"
+        >
+          <span className="sr-only">Toggle navigation</span>
+          <span className="navbar-toggler-icon"></span>
+        </button>
+        <div className="collapse navbar-collapse" id="navcol-1">
+          <ul className="nav navbar-nav mr-auto">
+            <li role="presentation" className="nav-item">
+              <Link className="nav-link active text-decoration-none" to="/">
+                Category
+              </Link>
+            </li>
+          </ul>
+          <span className="navbar-text actions">
+            <Link className="login text-decoration-none" to="/">
+              Log In
+            </Link>{" "}
+            <Link className="btn btn-m btn-warning py-0" role="button" to="/">
+              Sign Up
+            </Link>
+          </span>
         </div>
       </div>
-    </header>
+    </nav>
   );
 };
 export default Header;
