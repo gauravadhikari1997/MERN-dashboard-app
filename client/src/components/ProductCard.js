@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router-dom";
 
 function ProductCard() {
@@ -6,9 +7,9 @@ function ProductCard() {
       <div className="product-container">
         <div className="row">
           <div className="col-md-12">
-            <Link to="/" className="product-image">
+            <Link to="/product/:id" className="product-image">
               <img
-                className="img-fluid"
+                className="img-fluid rounded"
                 src="https://elcopcbonline.com/photos/product/4/176/4.jpg"
                 alt=""
               />
@@ -18,13 +19,16 @@ function ProductCard() {
         <div className="row">
           <div className="col-8">
             <h4>
-              <Link className="text-decoration-none" to="/">
+              <Link className="text-decoration-none" to="/product/:id">
                 Headphone
               </Link>
             </h4>
           </div>
           <div className="col-4">
-            <Link to="/" className="small-text text-decoration-none">
+            <Link
+              to="/product/:id#reviews"
+              className="small-text text-decoration-none"
+            >
               82 reviews
             </Link>
           </div>
@@ -35,11 +39,11 @@ function ProductCard() {
             <div className="row">
               <div className="col-6">
                 <Link
-                  to="/"
+                  to="/product/:id"
                   className="btn btn-warning py-0 text-decoration-none"
                   type="button"
                 >
-                  Buy Now!
+                  View
                 </Link>
               </div>
               <div className="col-6">

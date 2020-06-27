@@ -25,10 +25,14 @@ const Header = () => {
             </li>
           </ul>
           <span className="navbar-text actions">
-            <Link className="login text-decoration-none" to="/">
+            <Link className="login text-decoration-none" to="/signin">
               Log In
             </Link>{" "}
-            <Link className="btn btn-m btn-warning py-0" role="button" to="/">
+            <Link
+              className="btn btn-m btn-warning py-0"
+              role="button"
+              to="/signup"
+            >
               Sign Up
             </Link>
           </span>

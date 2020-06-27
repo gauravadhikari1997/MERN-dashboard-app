@@ -1,16 +1,16 @@
 import React from "react";
 
-import Product from "./Product";
+import ProductCard from "./ProductCard";
 
 function ProductList() {
   return (
     <div className="container">
       <div className="row product-list dev">
-        <Product />
-        <Product />
-        <Product />
-        <Product />
-        <Product />
+        <ProductCard />
+        <ProductCard />
+        <ProductCard />
+        <ProductCard />
+        <ProductCard />
       </div>
     </div>
   );
