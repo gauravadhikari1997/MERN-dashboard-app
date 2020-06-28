@@ -1,27 +1,59 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, withRouter } from "react-router-dom";
+import axios from "axios";
 
-function AddProduct() {
+function AddProduct(props) {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [category, setCategory] = useState("");
+
+  async function onFormSubmit(e) {
+    e.preventDefault();
+    const response = await axios.post(`/api/product`, {
+      name,
+      description,
+      price,
+      category,
+      image: imageUrl,
+      quantity,
+    });
+
+    setName("");
+    setDescription("");
+    setPrice("");
+    setImageUrl("");
+    setQuantity("");
+    setCategory("");
+
+    props.history.push(`/product/${response.data.product._id}`);
+  }
+
   return (
     <div className="container py-md-5">
       <Link to="/">Back</Link>
       <div className="row align-items-center">
         <div className="col-lg-5 py-3 py-md-5">
-          <h1 className="display-3 text-warning">Edit Details</h1>
+          <h1 className="display-3 text-warning">Add Product</h1>
         </div>
         <div className="col-lg-7 pl-lg-5 pb-3 py-lg-5">
-          <form>
+          <form onSubmit={onFormSubmit}>
             <div className="form-group">
               <label htmlFor="name-register" className="text-muted mb-1">
                 <small>Name</small>
               </label>
               <input
                 id="username-register"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 name="name"
                 className="form-control"
                 type="text"
                 placeholder="Enter product name"
                 autoComplete="off"
+                required
               />
             </div>
             <div className="form-group">
@@ -30,11 +62,14 @@ function AddProduct() {
               </label>
               <input
                 id="description-register"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 name="description"
                 className="form-control"
                 type="text"
                 placeholder="Enter description"
                 autoComplete="off"
+                required
               />
             </div>
             <div className="form-group">
@@ -43,11 +78,14 @@ function AddProduct() {
               </label>
               <input
                 id="price-register"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
                 name="price"
                 className="form-control"
-                type="tel"
+                type="number"
                 placeholder="Enter price"
                 autoComplete="off"
+                required
               />
             </div>
             <div className="form-group">
@@ -56,11 +94,14 @@ function AddProduct() {
               </label>
               <input
                 id="category-register"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
                 name="category"
                 className="form-control"
                 type="text"
                 placeholder="Enter category"
                 autoComplete="off"
+                required
               />
             </div>
             <div className="form-group">
@@ -68,12 +109,15 @@ function AddProduct() {
                 <small>Image Url</small>
               </label>
               <input
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
                 id="imageUrl-register"
                 name="imageUrl"
                 className="form-control"
                 type="text"
                 placeholder="Enter image url"
                 autoComplete="off"
+                required
               />
             </div>
             <div className="form-group">
@@ -81,30 +125,35 @@ function AddProduct() {
                 <small>Number of quantity</small>
               </label>
               <input
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
                 id="quantity-register"
                 name="quantity"
                 className="form-control"
-                type="tel"
+                type="number"
                 placeholder="Enter quantity"
                 autoComplete="off"
+                required
               />
             </div>
 
             <div className="row">
               <div className="col-6">
-                <button
-                  type="button"
-                  className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
-                >
-                  Delete Product
-                </button>
+                <Link to="/">
+                  <button
+                    type="button"
+                    className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
+                  >
+                    Cancel
+                  </button>
+                </Link>
               </div>
               <div className="col-6">
                 <button
                   type="submit"
                   className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
                 >
-                  Save
+                  Add
                 </button>
               </div>
             </div>
@@ -115,4 +164,4 @@ function AddProduct() {
   );
 }
 
-export default AddProduct;
+export default withRouter(AddProduct);
