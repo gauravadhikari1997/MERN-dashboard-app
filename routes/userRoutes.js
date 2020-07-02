@@ -29,7 +29,12 @@ module.exports = (app) => {
     }
     let user = await User.create(body);
     user.save(function (err) {
-      if (err) throw err;
+      if (err) {
+        return res.status(400).send({
+          error: true,
+          errorMessage: "Invalid details",
+        });
+      }
     });
     return res.status(200).send({
       error: false,
@@ -46,7 +51,7 @@ module.exports = (app) => {
         errorMessage: "You must provide details",
       });
     }
-    User.findOne({ email: body.email }, function (err, user) {
+    User.findOne({ mobile: body.mobile }, function (err, user) {
       if (err) throw err;
 
       // //test a matching password
