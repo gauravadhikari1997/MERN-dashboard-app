@@ -10,7 +10,7 @@ function FlashMessage(props) {
       unmountOnExit
     >
       <div
-        className="alert alert-warning alert-dismissible fade show"
+        className="alert alert-success alert-dismissible fade show"
         role="alert"
       >
         {props.message}

@@ -12,8 +12,8 @@ function SignIn(props) {
   async function handleSubmit(e) {
     e.preventDefault();
     const response = await axios.post(`/api/login`, {
-      password,
       mobile,
+      password,
     });
     console.log(response.data);
     setPassword("");
@@ -25,10 +25,13 @@ function SignIn(props) {
     <>
       <div className="container py-md-5">
         <Link to="/">Back</Link>
-        <FlashMessage
-          submitted={submitted}
-          message="Voila! successfully signed up"
-        />
+        <center>
+          <FlashMessage
+            submitted={submitted}
+            message="Voila! successfully signed in"
+          />
+        </center>
+
         <div className="row align-items-center">
           <div className="col-lg-5 py-3 py-md-5">
             <h1 className="display-3 text-warning">Sign In</h1>

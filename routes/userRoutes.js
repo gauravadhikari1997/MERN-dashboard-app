@@ -57,6 +57,10 @@ module.exports = (app) => {
       // //test a matching password
       user.comparePassword(body.password, function (err, isMatch) {
         if (err) throw err;
+        return res.status(200).send({
+          error: false,
+          user,
+        });
         // console.log("Password:", isMatch); // -> Password123: true
       });
     });
