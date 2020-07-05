@@ -1,34 +1,39 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link, withRouter } from "react-router-dom";
 import axios from "axios";
 
-import FlashMessage from "./FlashMessage";
+import DispatchContext from "../context/DispatchContext";
 
 function SignIn(props) {
+  const appDispatch = useContext(DispatchContext);
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
-  const [submitted, setSubmitted] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const response = await axios.post(`/api/login`, {
-      password,
-      mobile,
-    });
-    console.log(response.data);
-    setPassword("");
-    setMobile("");
-    setSubmitted(true);
+    try {
+      const response = await axios.post(`/api/login`, {
+        password,
+        mobile,
+      });
+      const user = {
+        username: response.data.name,
+        id: response.data.id,
+      };
+      appDispatch({ type: "LOG_IN", payload: user });
+      setPassword("");
+      setMobile("");
+      props.history.push("/");
+    } catch (e) {
+      console.log(e.message);
+    }
   }
 
   return (
     <>
       <div className="container py-md-5">
         <Link to="/">Back</Link>
-        <FlashMessage
-          submitted={submitted}
-          message="Voila! successfully signed up"
-        />
+
         <div className="row align-items-center">
           <div className="col-lg-5 py-3 py-md-5">
             <h1 className="display-3 text-warning">Sign In</h1>
@@ -40,6 +45,7 @@ function SignIn(props) {
                   <small>Mobile</small>
                 </label>
                 <input
+                  autoFocus
                   id="mobile-register"
                   name="mobile"
                   className="form-control"
@@ -79,4 +85,4 @@ function SignIn(props) {
   );
 }
 
-export default SignIn;
+export default withRouter(SignIn);

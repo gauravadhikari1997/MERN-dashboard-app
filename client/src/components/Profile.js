@@ -1,7 +1,25 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { Link, useParams, withRouter } from "react-router-dom";
+import axios from "axios";
+import StateContext from "../context/StateContext";
 
-function Profile() {
+function Profile(props) {
+  const appState = useContext(StateContext);
+  const [user, setUser] = useState({});
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (appState.isLoggedin) {
+      async function getData() {
+        const response = await axios.get(`/api/user/${id}`);
+        setUser(response.data.user);
+      }
+      getData();
+    } else {
+      props.history.push("/signin");
+    }
+  }, [id]);
+
   return (
     <div className="container py-md-5">
       <Link to="/">Back</Link>
@@ -13,15 +31,15 @@ function Profile() {
         <div className="col-lg-6 pl-lg-5 pb-3 py-lg-5">
           <blockquote className="blockquote">
             <p className="mb-0">Name</p>
-            <footer className="blockquote-footer">User Name</footer>
+            <footer className="blockquote-footer">{user.name}</footer>
           </blockquote>
           <blockquote className="blockquote">
             <p className="mb-0">Email</p>
-            <footer className="blockquote-footer">Email</footer>
+            <footer className="blockquote-footer">{user.email}</footer>
           </blockquote>
           <blockquote className="blockquote">
             <p className="mb-0">Mobile</p>
-            <footer className="blockquote-footer">Mobile</footer>
+            <footer className="blockquote-footer">{user.mobile}</footer>
           </blockquote>
           <blockquote className="blockquote">
             <p className="mb-0">Password</p>
@@ -29,18 +47,18 @@ function Profile() {
           </blockquote>
           <blockquote className="blockquote">
             <p className="mb-0">Address</p>
-            <footer className="blockquote-footer">Address</footer>
+            <footer className="blockquote-footer">{user.address}</footer>
           </blockquote>
-          <button
-            type="submit"
+          <Link
+            to={`/account/${id}/edit`}
             className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
           >
             Edit Details
-          </button>
+          </Link>
         </div>
       </div>
     </div>
   );
 }
 
-export default Profile;
+export default withRouter(Profile);

@@ -1,7 +1,49 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { Link, useParams, withRouter } from "react-router-dom";
+import axios from "axios";
+import DispatchContext from "../context/DispatchContext";
 
-function EditProfile() {
+function EditProfile(props) {
+  const appDispatch = useContext(DispatchContext);
+
+  const { id } = useParams();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
+
+  useEffect(() => {
+    async function getData() {
+      const response = await axios.get(`/api/user/${id}`);
+      const user = response.data.user;
+      setUsername(user.name);
+      setPassword(user.password);
+      setMobile(user.mobile);
+      setEmail(user.email);
+      setAddress(user.address);
+    }
+    getData();
+  }, [id]);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const response = await axios.put(`/api/user/${id}`, {
+      name: username,
+      password,
+      mobile,
+      email,
+      address,
+    });
+    props.history.push(`/account/${id}`);
+  }
+
+  async function onDelete() {
+    const response = await axios.delete(`/api/user/${id}`);
+    appDispatch({ type: "LOG_OUT" });
+    props.history.push(`/`);
+  }
+
   return (
     <div className="container py-md-5">
       <Link to="/account/:id">Back</Link>
@@ -10,15 +52,16 @@ function EditProfile() {
           <h1 className="display-3 text-warning">Edit Details</h1>
         </div>
         <div className="col-lg-7 pl-lg-5 pb-3 py-lg-5">
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="form-group">
               <input
                 id="username-register"
                 name="name"
                 className="form-control"
                 type="text"
-                value="your name"
+                value={username}
                 autoComplete="off"
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -27,8 +70,9 @@ function EditProfile() {
                 name="mobile"
                 className="form-control"
                 type="tel"
-                value="your mobile number"
+                value={mobile}
                 autoComplete="off"
+                onChange={(e) => setMobile(e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -37,8 +81,9 @@ function EditProfile() {
                 name="email"
                 className="form-control"
                 type="email"
-                value="you@example.com"
+                value={email}
                 autoComplete="off"
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -47,7 +92,8 @@ function EditProfile() {
                 name="password"
                 className="form-control"
                 type="password"
-                value="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -56,13 +102,15 @@ function EditProfile() {
                 name="address"
                 className="form-control"
                 type="text"
-                value="your address"
+                value={address}
                 autoComplete="off"
+                onChange={(e) => setAddress(e.target.value)}
               />
             </div>
             <div className="row">
               <div className="col-6">
                 <button
+                  onClick={onDelete}
                   type="button"
                   className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
                 >
@@ -85,4 +133,4 @@ function EditProfile() {
   );
 }
 
-export default EditProfile;
+export default withRouter(EditProfile);
