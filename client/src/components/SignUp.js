@@ -12,27 +12,34 @@ function SignUp() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const response = await axios.post(`/api/user`, {
-      name: username,
-      email,
-      password,
-      mobile,
-    });
-    console.log(response.data);
-    setUsername("");
-    setPassword("");
-    setMobile("");
-    setEmail("");
-    setSubmitted(true);
+    try {
+      const response = await axios.post(`/api/user`, {
+        name: username,
+        email,
+        password,
+        mobile,
+      });
+
+      localStorage.setItem("id", response.data.user._id);
+      setUsername("");
+      setPassword("");
+      setMobile("");
+      setEmail("");
+      setSubmitted(true);
+    } catch (e) {
+      console.log(e.message);
+    }
   }
 
   return (
     <div className="container py-md-5">
       <Link to="/">Back</Link>
-      <FlashMessage
-        submitted={submitted}
-        message="Voila! successfully signed up"
-      />
+      <center>
+        <FlashMessage
+          submitted={submitted}
+          message="Voila! successfully signed up, Please login now."
+        />
+      </center>
       <div className="row align-items-center">
         <div className="col-lg-5 py-3 py-md-5">
           <h1 className="display-3 text-warning">Sign Up</h1>

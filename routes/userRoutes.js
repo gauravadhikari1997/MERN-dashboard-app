@@ -59,7 +59,8 @@ module.exports = (app) => {
         if (err) throw err;
         return res.status(200).send({
           error: false,
-          user,
+          id: user._id,
+          name: user.name,
         });
         // console.log("Password:", isMatch); // -> Password123: true
       });

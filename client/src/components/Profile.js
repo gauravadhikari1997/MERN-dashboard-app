@@ -1,18 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { Link, useParams, withRouter } from "react-router-dom";
 import axios from "axios";
+import StateContext from "../context/StateContext";
 
-function Profile() {
+function Profile(props) {
+  const appState = useContext(StateContext);
   const [user, setUser] = useState({});
   const { id } = useParams();
 
   useEffect(() => {
-    async function getData() {
-      const response = await axios.get(`/api/user/${id}`);
-      setUser(response.data.user);
+    if (appState.user.id) {
+      async function getData() {
+        const response = await axios.get(`/api/user/${id}`);
+        setUser(response.data.user);
+      }
+      getData();
+    } else {
+      props.history.push("/signin");
     }
-    getData();
-  }, [id]);
+  });
 
   return (
     <div className="container py-md-5">
@@ -43,13 +49,11 @@ function Profile() {
             <p className="mb-0">Address</p>
             <footer className="blockquote-footer">{user.address}</footer>
           </blockquote>
-          <Link className="text-decoration-none" to={`/account/${id}/edit`}>
-            <button
-              type="submit"
-              className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block "
-            >
-              Edit Details
-            </button>
+          <Link
+            to={`/account/${id}/edit`}
+            className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
+          >
+            Edit Details
           </Link>
         </div>
       </div>
@@ -57,4 +61,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default withRouter(Profile);

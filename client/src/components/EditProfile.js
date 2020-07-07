@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useParams, withRouter } from "react-router-dom";
 import axios from "axios";
+import DispatchContext from "../context/DispatchContext";
 
 function EditProfile(props) {
+  const appDispatch = useContext(DispatchContext);
+
   const { id } = useParams();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -17,37 +20,33 @@ function EditProfile(props) {
       setUsername(user.name);
       setPassword(user.password);
       setMobile(user.mobile);
-      setAddress(user.address);
       setEmail(user.email);
+      setAddress(user.address);
     }
     getData();
   }, [id]);
 
   async function handleSubmit(e) {
+    e.preventDefault();
     try {
-      e.preventDefault();
       await axios.put(`/api/user/${id}`, {
         name: username,
-        email,
         password,
         mobile,
+        email,
         address,
       });
-      setUsername("");
-      setPassword("");
-      setMobile("");
-      setEmail("");
-      setAddress("");
       props.history.push(`/account/${id}`);
     } catch (e) {
       console.log(e.message);
     }
   }
 
-  async function handleDelete() {
+  async function onDelete() {
     try {
       await axios.delete(`/api/user/${id}`);
-      props.history.push("/");
+      appDispatch({ type: "LOG_OUT" });
+      props.history.push(`/`);
     } catch (e) {
       console.log(e.message);
     }
@@ -69,8 +68,8 @@ function EditProfile(props) {
                 className="form-control"
                 type="text"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
                 autoComplete="off"
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -80,8 +79,8 @@ function EditProfile(props) {
                 className="form-control"
                 type="tel"
                 value={mobile}
-                onChange={(e) => setMobile(e.target.value)}
                 autoComplete="off"
+                onChange={(e) => setMobile(e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -91,8 +90,8 @@ function EditProfile(props) {
                 className="form-control"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 autoComplete="off"
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="form-group">
@@ -112,14 +111,14 @@ function EditProfile(props) {
                 className="form-control"
                 type="text"
                 value={address}
-                onChange={(e) => setAddress(e.target.value)}
                 autoComplete="off"
+                onChange={(e) => setAddress(e.target.value)}
               />
             </div>
             <div className="row">
               <div className="col-6">
                 <button
-                  onClick={handleDelete}
+                  onClick={onDelete}
                   type="button"
                   className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
                 >

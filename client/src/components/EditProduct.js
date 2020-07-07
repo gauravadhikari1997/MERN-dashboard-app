@@ -27,29 +27,31 @@ function EditProduct(props) {
 
   async function onFormSubmit(e) {
     e.preventDefault();
-    const response = await axios.put(`/api/product/${id}`, {
-      name,
-      description,
-      price,
-      category,
-      image: imageUrl,
-      quantity,
-    });
+    try {
+      await axios.put(`/api/product/${id}`, {
+        name,
+        description,
+        price,
+        category,
+        image: imageUrl,
+        quantity,
+      });
 
-    console.log(response);
-    setName("");
-    setDescription("");
-    setPrice("");
-    setImageUrl("");
-    setQuantity("");
-    setCategory("");
-
+      setName("");
+      setDescription("");
+      setPrice("");
+      setImageUrl("");
+      setQuantity("");
+      setCategory("");
+    } catch (e) {
+      console.log(e.message);
+    }
     props.history.push(`/product/${id}`);
   }
 
   async function onDelete() {
     await axios.delete(`/api/product/${id}`);
-    props.history.push(`/product`);
+    props.history.push(`/`);
   }
 
   return (
@@ -173,7 +175,7 @@ function EditProduct(props) {
                   type="submit"
                   className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
                 >
-                  Add
+                  Save
                 </button>
               </div>
             </div>
