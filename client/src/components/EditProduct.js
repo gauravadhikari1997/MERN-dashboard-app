@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link, useParams, withRouter } from "react-router-dom";
 import axios from "axios";
-
+import StateContext from "../context/StateContext";
+import Loader from "./Loader";
 function EditProduct(props) {
+  const appState = useContext(StateContext);
+
   const { id } = useParams();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -10,23 +13,31 @@ function EditProduct(props) {
   const [imageUrl, setImageUrl] = useState("");
   const [quantity, setQuantity] = useState("");
   const [category, setCategory] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    async function getData() {
-      const response = await axios.get(`/api/product/${id}`);
-      const product = response.data.product;
-      setName(product.name);
-      setDescription(product.description);
-      setPrice(product.price);
-      setImageUrl(product.image);
-      setQuantity(product.quantity);
-      setCategory(product.category);
+    if (appState.user.isAdmin) {
+      async function getData() {
+        const response = await axios.get(`/api/product/${id}`);
+        const product = response.data.product;
+        setName(product.name);
+        setDescription(product.description);
+        setPrice(product.price);
+        setImageUrl(product.image);
+        setQuantity(product.quantity);
+        setCategory(product.category);
+        setIsLoading(false);
+      }
+      getData();
+    } else {
+      props.history.push(`/product/${id}`);
     }
-    getData();
   }, [id]);
 
   async function onFormSubmit(e) {
     e.preventDefault();
+    setIsProcessing(true);
     try {
       await axios.put(`/api/product/${id}`, {
         name,
@@ -43,17 +54,20 @@ function EditProduct(props) {
       setImageUrl("");
       setQuantity("");
       setCategory("");
+      setIsProcessing(false);
+      props.history.push(`/product/${id}`);
     } catch (e) {
       console.log(e.message);
     }
-    props.history.push(`/product/${id}`);
   }
 
   async function onDelete() {
     await axios.delete(`/api/product/${id}`);
     props.history.push(`/`);
   }
-
+  if (isLoading) {
+    return <Loader />;
+  }
   return (
     <div className="container py-md-5">
       <Link to={`/product/${id}`}>Back</Link>
@@ -171,12 +185,25 @@ function EditProduct(props) {
                 </button>
               </div>
               <div className="col-6">
-                <button
-                  type="submit"
-                  className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
-                >
-                  Save
-                </button>
+                {isProcessing ? (
+                  <button
+                    class="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
+                    disabled
+                  >
+                    <span
+                      class="spinner-border spinner-border-sm"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
+                  >
+                    Save
+                  </button>
+                )}
               </div>
             </div>
           </form>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Link, useParams, withRouter } from "react-router-dom";
 import axios from "axios";
 import DispatchContext from "../context/DispatchContext";
+import Loader from "./Loader";
 
 function EditProfile(props) {
   const appDispatch = useContext(DispatchContext);
@@ -12,7 +13,8 @@ function EditProfile(props) {
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
-
+  const [isLoading, setIsLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
   useEffect(() => {
     async function getData() {
       const response = await axios.get(`/api/user/${id}`);
@@ -22,12 +24,14 @@ function EditProfile(props) {
       setMobile(user.mobile);
       setEmail(user.email);
       setAddress(user.address);
+      setIsLoading(false);
     }
     getData();
   }, [id]);
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setIsProcessing(true);
     try {
       await axios.put(`/api/user/${id}`, {
         name: username,
@@ -36,6 +40,7 @@ function EditProfile(props) {
         email,
         address,
       });
+      setIsProcessing(false);
       props.history.push(`/account/${id}`);
     } catch (e) {
       console.log(e.message);
@@ -50,6 +55,9 @@ function EditProfile(props) {
     } catch (e) {
       console.log(e.message);
     }
+  }
+  if (isLoading) {
+    return <Loader />;
   }
 
   return (
@@ -125,13 +133,27 @@ function EditProfile(props) {
                   Delete Account
                 </button>
               </div>
+
               <div className="col-6">
-                <button
-                  type="submit"
-                  className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
-                >
-                  Save
-                </button>
+                {isProcessing ? (
+                  <button
+                    class="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
+                    disabled
+                  >
+                    <span
+                      class="spinner-border spinner-border-sm"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
+                  >
+                    Save
+                  </button>
+                )}
               </div>
             </div>
           </form>

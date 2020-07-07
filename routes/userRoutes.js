@@ -61,6 +61,7 @@ module.exports = (app) => {
           error: false,
           id: user._id,
           name: user.name,
+          isAdmin: user.isAdmin,
         });
         // console.log("Password:", isMatch); // -> Password123: true
       });

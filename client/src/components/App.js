@@ -21,7 +21,7 @@ import Orders from "./Orders";
 
 function App() {
   const initialState = {
-    user: { username: "", id: localStorage.getItem("id") },
+    user: { username: "", id: localStorage.getItem("id"), isAdmin: false },
   };
 
   function ourReducer(draft, action) {
@@ -47,6 +47,7 @@ function App() {
         const user = {
           username: response.data.user.name,
           id: state.user.id,
+          isAdmin: response.data.user.isAdmin,
         };
         dispatch({ type: "LOG_IN", payload: user });
       }

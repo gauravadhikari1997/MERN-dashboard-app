@@ -1,19 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
-
+import StateContext from "../context/StateContext";
+import Loader from "./Loader";
 const Product = () => {
+  const appState = useContext(StateContext);
   const [product, setProduct] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
 
   useEffect(() => {
     async function getData() {
       const response = await axios.get(`/api/product/${id}`);
       setProduct(response.data.product);
+      setIsLoading(false);
     }
     getData();
   }, [id]);
 
+  if (isLoading) {
+    return <Loader />;
+  }
   return (
     <div className="container">
       <Link to="/">Back</Link>
@@ -41,12 +48,22 @@ const Product = () => {
               </h4>
             </div>
             <div className="col">
-              <button
-                className="btn btn-warning btn-m center-block"
-                type="button"
-              >
-                <i className="fa fa-cart-plus"></i> Buy Now
-              </button>
+              {appState.user.isAdmin ? (
+                <Link
+                  to={`/product/${id}/edit`}
+                  className="btn btn-warning btn-m center-block"
+                  type="button"
+                >
+                  <i className="fa fa-cart-plus"></i> Edit
+                </Link>
+              ) : (
+                <button
+                  className="btn btn-warning btn-m center-block"
+                  type="button"
+                >
+                  <i className="fa fa-cart-plus"></i> Buy Now
+                </button>
+              )}
             </div>
           </div>
         </div>

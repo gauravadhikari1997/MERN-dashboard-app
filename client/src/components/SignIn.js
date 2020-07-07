@@ -8,22 +8,27 @@ function SignIn(props) {
   const appDispatch = useContext(DispatchContext);
   const [mobile, setMobile] = useState("");
   const [password, setPassword] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setIsProcessing(true);
     try {
       const response = await axios.post(`/api/login`, {
         password,
         mobile,
       });
+
       const user = {
         username: response.data.name,
         id: response.data.id,
+        isAdmin: response.data.isAdmin,
       };
       localStorage.setItem("id", user.id);
       appDispatch({ type: "LOG_IN", payload: user });
       setPassword("");
       setMobile("");
+      setIsProcessing(false);
       props.history.push("/");
     } catch (e) {
       console.log(e.message);
@@ -72,12 +77,25 @@ function SignIn(props) {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <button
-                type="submit"
-                className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
-              >
-                Sign in
-              </button>
+              {isProcessing ? (
+                <button
+                  class="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
+                  disabled
+                >
+                  <span
+                    class="spinner-border spinner-border-sm"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
+                >
+                  Sign in
+                </button>
+              )}
             </form>
           </div>
         </div>

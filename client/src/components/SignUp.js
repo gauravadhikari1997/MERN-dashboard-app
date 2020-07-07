@@ -9,9 +9,11 @@ function SignUp() {
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setIsProcessing(true);
     try {
       const response = await axios.post(`/api/user`, {
         name: username,
@@ -26,6 +28,7 @@ function SignUp() {
       setMobile("");
       setEmail("");
       setSubmitted(true);
+      setIsProcessing(false);
     } catch (e) {
       console.log(e.message);
     }
@@ -109,12 +112,25 @@ function SignUp() {
                 required
               />
             </div>
-            <button
-              type="submit"
-              className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
-            >
-              Sign up
-            </button>
+            {isProcessing ? (
+              <button
+                class="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
+                disabled
+              >
+                <span
+                  class="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+              </button>
+            ) : (
+              <button
+                type="submit"
+                className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
+              >
+                Sign up
+              </button>
+            )}
           </form>
         </div>
       </div>

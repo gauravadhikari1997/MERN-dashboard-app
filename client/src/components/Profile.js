@@ -2,10 +2,12 @@ import React, { useState, useEffect, useContext } from "react";
 import { Link, useParams, withRouter } from "react-router-dom";
 import axios from "axios";
 import StateContext from "../context/StateContext";
+import Loader from "./Loader";
 
 function Profile(props) {
   const appState = useContext(StateContext);
   const [user, setUser] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
 
   useEffect(() => {
@@ -13,6 +15,7 @@ function Profile(props) {
       async function getData() {
         const response = await axios.get(`/api/user/${id}`);
         setUser(response.data.user);
+        setIsLoading(false);
       }
       getData();
     } else {
@@ -20,6 +23,9 @@ function Profile(props) {
     }
   });
 
+  if (isLoading) {
+    return <Loader />;
+  }
   return (
     <div className="container py-md-5">
       <Link to="/">Back</Link>

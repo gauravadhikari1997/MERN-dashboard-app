@@ -10,6 +10,7 @@ const userSchema = new Schema({
   address: { type: String },
   mobile: { type: Number, unique: true, required: true },
   orders: { type: Array },
+  isAdmin: { type: Boolean, default: false },
 });
 
 userSchema.pre("save", function (next) {
