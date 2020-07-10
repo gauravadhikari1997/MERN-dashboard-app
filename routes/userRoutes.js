@@ -92,4 +92,24 @@ module.exports = (app) => {
       user,
     });
   });
+
+  //to place an order
+  app.put(`/api/order/`, async (req, res) => {
+    const body = req.body;
+    if (!body.id || !body.orders) {
+      return res.status(400).send({
+        error: true,
+        errorMessage: "You must provide details",
+      });
+    }
+
+    let user = await User.updateOne(
+      { _id: body.id },
+      { $push: { orders: body.orders } }
+    );
+    return res.status(200).send({
+      error: false,
+      user,
+    });
+  });
 };

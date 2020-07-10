@@ -1,12 +1,35 @@
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import StateContext from "../context/StateContext";
+import axios from "axios";
 
-function Cart() {
+function Cart({ history }) {
   const appState = useContext(StateContext);
   const [counter, setCounter] = useState(1);
   const product = appState.product;
-  const [price, setPrice] = useState(product.price);
+
+  const handleOrder = async (e) => {
+    e.preventDefault();
+    const order = {
+      ...product,
+      price: product.price * counter,
+      quantity: counter,
+      date: new Date().toLocaleString(),
+    };
+    try {
+      await axios.put(`/api/order`, {
+        id: appState.user.id,
+        orders: [order],
+      });
+      await axios.put(`/api/product/${product._id}`, {
+        ...product,
+        quantity: product.quantity - counter,
+      });
+      history.push(`/account/${appState.user.id}/orders`);
+    } catch (e) {
+      console.log(e.message);
+    }
+  };
 
   return (
     <div className="container py-md-5">
@@ -18,8 +41,8 @@ function Cart() {
         </div>
         <div className="col-lg-7 pl-lg-5 pb-3 py-lg-5">
           <form>
-            <div className="row">
-              <div className="col d-flex flex-column justify-content-center">
+            <div style={{ marginBottom: "15px" }} className="row">
+              <div className="col-7 d-flex flex-column justify-content-center">
                 <label
                   htmlFor="username-register"
                   className="text-warning mb-1"
@@ -27,13 +50,11 @@ function Cart() {
                   <h3>{appState.product.name}</h3>
                 </label>
               </div>
-              <div className="col">
+              <div className="col-5">
                 <img
-                  className="img-fluid"
+                  className="img-fluid thumbnail rounded float-left"
                   src={appState.product.image}
                   alt="Responsive image"
-                  width="300px"
-                  height="200px"
                 />
               </div>
             </div>
@@ -69,8 +90,9 @@ function Cart() {
               </label>{" "}
               <i
                 onClick={() => {
-                  if (counter < product.quantity)
+                  if (counter < product.quantity) {
                     return setCounter(counter + 1);
+                  }
                 }}
                 className="fa fa-plus"
               ></i>{" "}
@@ -84,7 +106,7 @@ function Cart() {
             <div className="form-group">
               <h4 className=" text-success">
                 <span className=" text-muted">Total:</span>{" "}
-                <i className="fa fa-rupee"></i> {product.price}
+                <i className="fa fa-rupee"></i> {product.price * counter}
               </h4>
             </div>
             <div className="row">
@@ -98,7 +120,7 @@ function Cart() {
               </div>
               <div className="col-6">
                 <button
-                  type="submit"
+                  onClick={handleOrder}
                   className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
                 >
                   Place Order
@@ -112,4 +134,4 @@ function Cart() {
   );
 }
 
-export default Cart;
+export default withRouter(Cart);

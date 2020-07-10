@@ -73,6 +73,7 @@ const Product = ({ history }) => {
                 </Link>
               ) : (
                 <button
+                  disabled={product.quantity === 0 ? true : false}
                   onClick={handleBuy}
                   className="btn btn-warning btn-m center-block"
                 >
