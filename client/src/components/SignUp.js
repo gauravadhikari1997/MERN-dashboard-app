@@ -114,11 +114,11 @@ function SignUp() {
             </div>
             {isProcessing ? (
               <button
-                class="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
+                className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
                 disabled
               >
                 <span
-                  class="spinner-border spinner-border-sm"
+                  className="spinner-border spinner-border-sm"
                   role="status"
                   aria-hidden="true"
                 ></span>

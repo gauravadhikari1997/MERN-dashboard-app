@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, withRouter } from "react-router-dom";
 import axios from "axios";
 import StateContext from "../context/StateContext";
+import DispatchContext from "../context/DispatchContext";
 import Loader from "./Loader";
-const Product = () => {
+
+const Product = ({ history }) => {
   const appState = useContext(StateContext);
+  const appDispatch = useContext(DispatchContext);
   const [product, setProduct] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const { id } = useParams();
@@ -17,6 +20,12 @@ const Product = () => {
     }
     getData();
   }, [id]);
+
+  const handleBuy = () => {
+    localStorage.setItem("product", JSON.stringify(product));
+    appDispatch({ type: "BUY_NOW", payload: product });
+    history.push("/cart");
+  };
 
   if (isLoading) {
     return <Loader />;
@@ -41,6 +50,12 @@ const Product = () => {
         <div className="col-md-7">
           <h1 className="py-2 text-warning">{product.name}</h1>
           <p className="py-3">{product.description}</p>
+          {product.quantity ? (
+            <p className="py-3 text-success">In Stock</p>
+          ) : (
+            <p className="py-3 text-danger">Out of Stock</p>
+          )}
+
           <div className="row">
             <div className="col ">
               <h4 className=" text-success">
@@ -58,8 +73,8 @@ const Product = () => {
                 </Link>
               ) : (
                 <button
+                  onClick={handleBuy}
                   className="btn btn-warning btn-m center-block"
-                  type="button"
                 >
                   <i className="fa fa-cart-plus"></i> Buy Now
                 </button>
@@ -72,4 +87,4 @@ const Product = () => {
   );
 };
 
-export default Product;
+export default withRouter(Product);

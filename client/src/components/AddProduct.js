@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, withRouter } from "react-router-dom";
 import axios from "axios";
+import StateContext from "../context/StateContext";
 
 function AddProduct(props) {
+  const appState = useContext(StateContext);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -31,9 +33,12 @@ function AddProduct(props) {
     props.history.push(`/product/${response.data.product._id}`);
   }
 
+  if (!appState.user.isAdmin) {
+    return <h1 className="text-center py-4">Not authorised!</h1>;
+  }
   return (
     <div className="container py-md-5">
-      <Link to="/">Back</Link>
+      <Link to="/admin">Back</Link>
       <div className="row align-items-center">
         <div className="col-lg-5 py-3 py-md-5">
           <h1 className="display-3 text-warning">Add Product</h1>

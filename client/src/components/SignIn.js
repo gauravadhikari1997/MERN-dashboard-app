@@ -23,6 +23,7 @@ function SignIn(props) {
         username: response.data.name,
         id: response.data.id,
         isAdmin: response.data.isAdmin,
+        address: response.data.address,
       };
       localStorage.setItem("id", user.id);
       appDispatch({ type: "LOG_IN", payload: user });
@@ -79,11 +80,11 @@ function SignIn(props) {
               </div>
               {isProcessing ? (
                 <button
-                  class="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
+                  className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
                   disabled
                 >
                   <span
-                    class="spinner-border spinner-border-sm"
+                    className="spinner-border spinner-border-sm"
                     role="status"
                     aria-hidden="true"
                   ></span>

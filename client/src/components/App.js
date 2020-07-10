@@ -18,10 +18,18 @@ import EditProfile from "./EditProfile";
 import EditProduct from "./EditProduct";
 import AddProduct from "./AddProduct";
 import Orders from "./Orders";
+import Dashboard from "./Dashboard";
+import Cart from "./Cart";
 
 function App() {
   const initialState = {
-    user: { username: "", id: localStorage.getItem("id"), isAdmin: false },
+    user: {
+      username: "",
+      id: localStorage.getItem("id"),
+      isAdmin: false,
+      address: "",
+    },
+    product: JSON.parse(localStorage.getItem("product")),
   };
 
   function ourReducer(draft, action) {
@@ -31,6 +39,13 @@ function App() {
         return;
       case "LOG_OUT":
         draft.user = { username: "", id: "" };
+        return;
+      case "BUY_NOW":
+        draft.product = action.payload;
+        return;
+      case "UPDATE":
+        draft.user.username = action.payload.username;
+        draft.user.address = action.payload.address;
         return;
       default:
         return;
@@ -48,6 +63,7 @@ function App() {
           username: response.data.user.name,
           id: state.user.id,
           isAdmin: response.data.user.isAdmin,
+          address: response.data.user.address,
         };
         dispatch({ type: "LOG_IN", payload: user });
       }
@@ -70,6 +86,8 @@ function App() {
             <Route exact path="/account/:id/edit" component={EditProfile} />
             <Route exact path="/account/:id/orders" component={Orders} />
             <Route exact path="/account/:id/" component={Profile} />
+            <Route exact path="/admin" component={Dashboard} />
+            <Route exact path="/cart" component={Cart} />
             <Redirect to="/" />
           </Switch>
           <Footer />

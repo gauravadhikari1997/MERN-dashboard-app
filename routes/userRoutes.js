@@ -3,15 +3,14 @@ const User = mongoose.model("users");
 const bcrypt = require("bcrypt");
 
 module.exports = (app) => {
-  //to get all users
-  app.get(`/api/users`, async (req, res) => {
-    let users = await User.find({});
-    return res.status(200).send(users);
-  });
-
   //to get a user
   app.get(`/api/user/:id`, async (req, res) => {
     let user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(204).send({
+        error: true,
+      });
+    }
     return res.status(200).send({
       error: false,
       user,
@@ -54,7 +53,7 @@ module.exports = (app) => {
     User.findOne({ mobile: body.mobile }, function (err, user) {
       if (err) throw err;
 
-      // //test a matching password
+      // test a matching password
       user.comparePassword(body.password, function (err, isMatch) {
         if (err) throw err;
         return res.status(200).send({
@@ -62,6 +61,7 @@ module.exports = (app) => {
           id: user._id,
           name: user.name,
           isAdmin: user.isAdmin,
+          address: user.address,
         });
         // console.log("Password:", isMatch); // -> Password123: true
       });

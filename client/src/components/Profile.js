@@ -21,7 +21,7 @@ function Profile(props) {
     } else {
       props.history.push("/signin");
     }
-  });
+  }, []);
 
   if (isLoading) {
     return <Loader />;
