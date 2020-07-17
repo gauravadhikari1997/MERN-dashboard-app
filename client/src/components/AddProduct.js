@@ -2,6 +2,11 @@ import React, { useState, useContext } from "react";
 import { Link, withRouter } from "react-router-dom";
 import axios from "axios";
 import StateContext from "../context/StateContext";
+import { Editor } from "react-draft-wysiwyg";
+import { EditorState } from "draft-js";
+import { stateToHTML } from "draft-js-export-html";
+
+import "../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 function AddProduct(props) {
   const appState = useContext(StateContext);
@@ -12,11 +17,17 @@ function AddProduct(props) {
   const [quantity, setQuantity] = useState("");
   const [category, setCategory] = useState("");
 
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+
+  function onEditorStateChange(editorState) {
+    setEditorState(editorState);
+  }
+
   async function onFormSubmit(e) {
     e.preventDefault();
     const response = await axios.post(`/api/product`, {
       name,
-      description,
+      description: stateToHTML(editorState.getCurrentContent()),
       price,
       category,
       image: imageUrl,
@@ -29,6 +40,7 @@ function AddProduct(props) {
     setImageUrl("");
     setQuantity("");
     setCategory("");
+    setEditorState(EditorState.createEmpty());
 
     props.history.push(`/product/${response.data.product._id}`);
   }
@@ -39,11 +51,25 @@ function AddProduct(props) {
   return (
     <div className="container py-md-5">
       <Link to="/admin">Back</Link>
-      <div className="row align-items-center">
+      <div className="row">
         <div className="col-lg-5 py-3 py-md-5">
           <h1 className="display-3 text-warning">Add Product</h1>
         </div>
         <div className="col-lg-7 pl-lg-5 pb-3 py-lg-5">
+          <Editor
+            toolbar={{
+              inline: { inDropdown: true },
+              list: { inDropdown: true },
+              textAlign: { inDropdown: true },
+              link: { inDropdown: true },
+              history: { inDropdown: true },
+            }}
+            editorState={editorState}
+            wrapperClassName="demo-wrapper"
+            editorClassName="demo-editor"
+            onEditorStateChange={onEditorStateChange}
+          />
+
           <form onSubmit={onFormSubmit}>
             <div className="form-group">
               <label htmlFor="name-register" className="text-muted mb-1">
@@ -61,22 +87,7 @@ function AddProduct(props) {
                 required
               />
             </div>
-            <div className="form-group">
-              <label htmlFor="username-register" className="text-muted mb-1">
-                <small>Description</small>
-              </label>
-              <input
-                id="description-register"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                name="description"
-                className="form-control"
-                type="text"
-                placeholder="Enter description"
-                autoComplete="off"
-                required
-              />
-            </div>
+
             <div className="form-group">
               <label htmlFor="username-register" className="text-muted mb-1">
                 <small>Price</small>
@@ -108,6 +119,22 @@ function AddProduct(props) {
                 autoComplete="off"
                 required
               />
+            </div>
+            <div className="form-group">
+              <label htmlFor="username-register" className="text-muted mb-1">
+                <small>Description</small>
+              </label>
+              <textarea
+                id="description-register"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                name="description"
+                className="form-control"
+                type="text"
+                placeholder="Enter description"
+                autoComplete="off"
+                rows="10"
+              ></textarea>
             </div>
             <div className="form-group">
               <label htmlFor="username-register" className="text-muted mb-1">

@@ -8,35 +8,26 @@ function ProductCard({ product }) {
         <div className="row">
           <div className="col-md-12">
             <Link to={`/product/${product._id}`} className="product-image">
-              <img className="img-fluid rounded" src={product.image} alt="" />
+              <center>
+                <img className="img-fluid rounded" src={product.image} alt="" />
+              </center>
             </Link>
           </div>
         </div>
-        <div className="row">
-          <div className="col-8">
-            <h4>
-              <Link
-                className="text-decoration-none"
-                to={`/product/${product._id}`}
-              >
-                {product.name}
-              </Link>
-            </h4>
-          </div>
-          <div className="col-4">
+        <div className="row pb-2">
+          <div className="col-12">
             <Link
-              to={`/product/${product._id}#reviews`}
-              className="small-text text-decoration-none"
+              className="text-decoration-none"
+              to={`/product/${product._id}`}
             >
-              {product.reviews.length} reviews
+              <span className="font-weight-bold">{product.name}</span>
             </Link>
           </div>
         </div>
         <div className="row">
           <div className="col-12">
-            <p className="product-description">{product.description} </p>
             <div className="row">
-              <div className="col-6">
+              <div className="col-4">
                 <Link
                   to={`/product/${product._id}`}
                   className="btn btn-warning py-0 text-decoration-none"
@@ -45,8 +36,16 @@ function ProductCard({ product }) {
                   View
                 </Link>
               </div>
-              <div className="col-6">
+              <div className="col-4">
                 <p className="product-price">₹{product.price} </p>
+              </div>
+              <div className="col-4">
+                <Link
+                  to={`/product/${product._id}#reviews`}
+                  className="small-text text-decoration-none"
+                >
+                  {product.reviews.length} reviews
+                </Link>
               </div>
             </div>
           </div>

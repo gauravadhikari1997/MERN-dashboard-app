@@ -32,7 +32,7 @@ function Profile(props) {
       <div className="row align-items-center">
         <div className="col-lg-6 py-3 py-md-5">
           <h1 className="display-3 text-warning">My Account</h1>
-          <p>Order list goes here..</p>
+          <Link to={`/account/${id}/orders`}>My Orders</Link>
         </div>
         <div className="col-lg-6 pl-lg-5 pb-3 py-lg-5">
           <blockquote className="blockquote">

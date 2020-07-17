@@ -97,7 +97,7 @@ function EditProduct(props) {
               <label htmlFor="username-register" className="text-muted mb-1">
                 <small>Description</small>
               </label>
-              <input
+              <textarea
                 id="description-register"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -107,7 +107,8 @@ function EditProduct(props) {
                 placeholder="Enter description"
                 autoComplete="off"
                 required
-              />
+                rows="10"
+              ></textarea>
             </div>
             <div className="form-group">
               <label htmlFor="username-register" className="text-muted mb-1">

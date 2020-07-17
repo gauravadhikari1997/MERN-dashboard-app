@@ -119,12 +119,21 @@ function Cart({ history }) {
                 </Link>
               </div>
               <div className="col-6">
-                <button
-                  onClick={handleOrder}
-                  className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
-                >
-                  Place Order
-                </button>
+                {appState.user.id ? (
+                  <button
+                    onClick={handleOrder}
+                    className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
+                  >
+                    Place Order
+                  </button>
+                ) : (
+                  <Link
+                    to={"/signin"}
+                    className="py-3 mt-4 btn btn-sm btn-outline-warning btn-block"
+                  >
+                    Login to Buy
+                  </Link>
+                )}
               </div>
             </div>
           </form>

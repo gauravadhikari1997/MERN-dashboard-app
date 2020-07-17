@@ -5,6 +5,8 @@ import StateContext from "../context/StateContext";
 import DispatchContext from "../context/DispatchContext";
 import Loader from "./Loader";
 
+import { EditorState, Editor } from "draft-js";
+
 const Product = ({ history }) => {
   const appState = useContext(StateContext);
   const appDispatch = useContext(DispatchContext);
@@ -34,6 +36,8 @@ const Product = ({ history }) => {
     <div className="container">
       <Link to="/">Back</Link>
       <h1>Product Details</h1>
+
+      {console.log(product)}
       <div className="row py-4">
         <div className="col-md-5">
           <div className="row">
@@ -48,14 +52,13 @@ const Product = ({ history }) => {
           </div>
         </div>
         <div className="col-md-7">
-          <h1 className="py-2 text-warning">{product.name}</h1>
-          <p className="py-3">{product.description}</p>
+          <h3 className="py-2 text-warning">{product.name}</h3>
+          <div dangerouslySetInnerHTML={{ __html: product.description }} />
           {product.quantity ? (
             <p className="py-3 text-success">In Stock</p>
           ) : (
             <p className="py-3 text-danger">Out of Stock</p>
           )}
-
           <div className="row">
             <div className="col ">
               <h4 className=" text-success">
