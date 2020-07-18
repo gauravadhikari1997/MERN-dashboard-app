@@ -1,20 +1,30 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Link, useParams, withRouter } from "react-router-dom";
 import axios from "axios";
+import { Editor } from "react-draft-wysiwyg";
+import { EditorState } from "draft-js";
+import { stateToHTML } from "draft-js-export-html";
+
+import "../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+
 import StateContext from "../context/StateContext";
 import Loader from "./Loader";
+
 function EditProduct(props) {
   const appState = useContext(StateContext);
 
   const { id } = useParams();
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [quantity, setQuantity] = useState("");
   const [category, setCategory] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  function onEditorStateChange(editorState) {
+    setEditorState(editorState);
+  }
 
   useEffect(() => {
     if (appState.user.isAdmin) {
@@ -22,11 +32,11 @@ function EditProduct(props) {
         const response = await axios.get(`/api/product/${id}`);
         const product = response.data.product;
         setName(product.name);
-        setDescription(product.description);
         setPrice(product.price);
         setImageUrl(product.image);
         setQuantity(product.quantity);
         setCategory(product.category);
+        setEditorState(product.description);
         setIsLoading(false);
       }
       getData();
@@ -41,7 +51,7 @@ function EditProduct(props) {
     try {
       await axios.put(`/api/product/${id}`, {
         name,
-        description,
+        description: stateToHTML(editorState.getCurrentContent()),
         price,
         category,
         image: imageUrl,
@@ -49,12 +59,13 @@ function EditProduct(props) {
       });
 
       setName("");
-      setDescription("");
       setPrice("");
       setImageUrl("");
       setQuantity("");
       setCategory("");
+      setEditorState(EditorState.createEmpty());
       setIsProcessing(false);
+
       props.history.push(`/product/${id}`);
     } catch (e) {
       console.log(e.message);
@@ -97,18 +108,19 @@ function EditProduct(props) {
               <label htmlFor="username-register" className="text-muted mb-1">
                 <small>Description</small>
               </label>
-              <textarea
-                id="description-register"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                name="description"
-                className="form-control"
-                type="text"
-                placeholder="Enter description"
-                autoComplete="off"
-                required
-                rows="10"
-              ></textarea>
+              <Editor
+                toolbar={{
+                  inline: { inDropdown: true },
+                  list: { inDropdown: true },
+                  textAlign: { inDropdown: true },
+                  link: { inDropdown: true },
+                  history: { inDropdown: true },
+                }}
+                editorState={editorState}
+                wrapperClassName="border"
+                editorClassName=""
+                onEditorStateChange={onEditorStateChange}
+              />
             </div>
             <div className="form-group">
               <label htmlFor="username-register" className="text-muted mb-1">

@@ -11,7 +11,6 @@ import "../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 function AddProduct(props) {
   const appState = useContext(StateContext);
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [quantity, setQuantity] = useState("");
@@ -35,7 +34,6 @@ function AddProduct(props) {
     });
 
     setName("");
-    setDescription("");
     setPrice("");
     setImageUrl("");
     setQuantity("");
@@ -56,20 +54,6 @@ function AddProduct(props) {
           <h1 className="display-3 text-warning">Add Product</h1>
         </div>
         <div className="col-lg-7 pl-lg-5 pb-3 py-lg-5">
-          <Editor
-            toolbar={{
-              inline: { inDropdown: true },
-              list: { inDropdown: true },
-              textAlign: { inDropdown: true },
-              link: { inDropdown: true },
-              history: { inDropdown: true },
-            }}
-            editorState={editorState}
-            wrapperClassName="demo-wrapper"
-            editorClassName="demo-editor"
-            onEditorStateChange={onEditorStateChange}
-          />
-
           <form onSubmit={onFormSubmit}>
             <div className="form-group">
               <label htmlFor="name-register" className="text-muted mb-1">
@@ -124,17 +108,20 @@ function AddProduct(props) {
               <label htmlFor="username-register" className="text-muted mb-1">
                 <small>Description</small>
               </label>
-              <textarea
-                id="description-register"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                name="description"
-                className="form-control"
-                type="text"
-                placeholder="Enter description"
-                autoComplete="off"
-                rows="10"
-              ></textarea>
+
+              <Editor
+                toolbar={{
+                  inline: { inDropdown: true },
+                  list: { inDropdown: true },
+                  textAlign: { inDropdown: true },
+                  link: { inDropdown: true },
+                  history: { inDropdown: true },
+                }}
+                editorState={editorState}
+                wrapperClassName="border"
+                editorClassName=""
+                onEditorStateChange={onEditorStateChange}
+              />
             </div>
             <div className="form-group">
               <label htmlFor="username-register" className="text-muted mb-1">

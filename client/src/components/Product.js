@@ -5,8 +5,6 @@ import StateContext from "../context/StateContext";
 import DispatchContext from "../context/DispatchContext";
 import Loader from "./Loader";
 
-import { EditorState, Editor } from "draft-js";
-
 const Product = ({ history }) => {
   const appState = useContext(StateContext);
   const appDispatch = useContext(DispatchContext);
