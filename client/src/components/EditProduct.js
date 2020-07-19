@@ -2,10 +2,9 @@ import React, { useEffect, useState, useContext } from "react";
 import { Link, useParams, withRouter } from "react-router-dom";
 import axios from "axios";
 import { Editor } from "react-draft-wysiwyg";
-import { EditorState } from "draft-js";
+import { EditorState, ContentState } from "draft-js";
+import htmlToDraft from "html-to-draftjs";
 import { stateToHTML } from "draft-js-export-html";
-
-import "../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 import StateContext from "../context/StateContext";
 import Loader from "./Loader";
@@ -21,22 +20,27 @@ function EditProduct(props) {
   const [category, setCategory] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
-  function onEditorStateChange(editorState) {
-    setEditorState(editorState);
-  }
+  const [description, setDescription] = useState(EditorState.createEmpty());
 
   useEffect(() => {
     if (appState.user.isAdmin) {
       async function getData() {
         const response = await axios.get(`/api/product/${id}`);
         const product = response.data.product;
+
+        const blocksFromHtml = htmlToDraft(product.description);
+        const { contentBlocks, entityMap } = blocksFromHtml;
+        const contentState = ContentState.createFromBlockArray(
+          contentBlocks,
+          entityMap
+        );
+        const myeditorState = EditorState.createWithContent(contentState);
+        setDescription(myeditorState);
         setName(product.name);
         setPrice(product.price);
         setImageUrl(product.image);
         setQuantity(product.quantity);
         setCategory(product.category);
-        setEditorState(product.description);
         setIsLoading(false);
       }
       getData();
@@ -51,7 +55,7 @@ function EditProduct(props) {
     try {
       await axios.put(`/api/product/${id}`, {
         name,
-        description: stateToHTML(editorState.getCurrentContent()),
+        description: stateToHTML(description.getCurrentContent()),
         price,
         category,
         image: imageUrl,
@@ -63,7 +67,7 @@ function EditProduct(props) {
       setImageUrl("");
       setQuantity("");
       setCategory("");
-      setEditorState(EditorState.createEmpty());
+      setDescription(EditorState.createEmpty());
       setIsProcessing(false);
 
       props.history.push(`/product/${id}`);
@@ -116,10 +120,12 @@ function EditProduct(props) {
                   link: { inDropdown: true },
                   history: { inDropdown: true },
                 }}
-                editorState={editorState}
+                editorState={description}
                 wrapperClassName="border"
                 editorClassName=""
-                onEditorStateChange={onEditorStateChange}
+                onEditorStateChange={(description) =>
+                  setDescription(description)
+                }
               />
             </div>
             <div className="form-group">

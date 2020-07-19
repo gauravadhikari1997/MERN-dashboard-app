@@ -1,11 +1,12 @@
 import React, { useState, useContext } from "react";
 import { Link, withRouter } from "react-router-dom";
 import axios from "axios";
-import StateContext from "../context/StateContext";
+
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
 
+import StateContext from "../context/StateContext";
 import "../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 function AddProduct(props) {
@@ -16,17 +17,13 @@ function AddProduct(props) {
   const [quantity, setQuantity] = useState("");
   const [category, setCategory] = useState("");
 
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
-
-  function onEditorStateChange(editorState) {
-    setEditorState(editorState);
-  }
+  const [description, setDescription] = useState(EditorState.createEmpty());
 
   async function onFormSubmit(e) {
     e.preventDefault();
     const response = await axios.post(`/api/product`, {
       name,
-      description: stateToHTML(editorState.getCurrentContent()),
+      description: stateToHTML(description.getCurrentContent()),
       price,
       category,
       image: imageUrl,
@@ -38,7 +35,7 @@ function AddProduct(props) {
     setImageUrl("");
     setQuantity("");
     setCategory("");
-    setEditorState(EditorState.createEmpty());
+    setDescription(EditorState.createEmpty());
 
     props.history.push(`/product/${response.data.product._id}`);
   }
@@ -117,10 +114,12 @@ function AddProduct(props) {
                   link: { inDropdown: true },
                   history: { inDropdown: true },
                 }}
-                editorState={editorState}
+                editorState={description}
                 wrapperClassName="border"
                 editorClassName=""
-                onEditorStateChange={onEditorStateChange}
+                onEditorStateChange={(description) =>
+                  setDescription(description)
+                }
               />
             </div>
             <div className="form-group">

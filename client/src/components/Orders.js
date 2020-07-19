@@ -42,14 +42,14 @@ function Orders() {
                     <div className="col-sm-7 ">
                       <div className="card-body">
                         <h4 className="card-title">{order.name}</h4>
-                        <p className="card-text">{order.description}</p>
+                        <p className="card-text">{order.date}</p>
 
-                        <div class="row">
-                          <div class="col-sm-6">
+                        <div className="row">
+                          <div className="col-sm-6">
                             <h6>Price:</h6>
                             <p className="card-text">{order.price}</p>
                           </div>
-                          <div class="col-sm-6">
+                          <div className="col-sm-6">
                             <h6>Quantity:</h6>
                             <p className="card-text">{order.quantity}</p>
                           </div>

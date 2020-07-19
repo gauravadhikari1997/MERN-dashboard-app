@@ -34,8 +34,6 @@ const Product = ({ history }) => {
     <div className="container">
       <Link to="/">Back</Link>
       <h1>Product Details</h1>
-
-      {console.log(product)}
       <div className="row py-4">
         <div className="col-md-5">
           <div className="row">

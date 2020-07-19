@@ -15,6 +15,7 @@ function EditProfile(props) {
   const [address, setAddress] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
+
   useEffect(() => {
     async function getData() {
       const response = await axios.get(`/api/user/${id}`);
